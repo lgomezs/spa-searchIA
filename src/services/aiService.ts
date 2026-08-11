@@ -43,8 +43,8 @@ export async function askQuestion(question: string, timeoutMs = 30000): Promise<
     }
 
     return data
-  } catch (err: any) {
-    if (err.name === 'AbortError') {
+  } catch (err: unknown) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
       throw new Error('Timeout: la petición tardó demasiado.')
     }
     throw err

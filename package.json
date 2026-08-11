@@ -10,17 +10,19 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "highlight.js": "^11.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.14.1",
     "react-markdown": "^8.0.7",
-    "remark-gfm": "^3.0.1",
+    "react-router-dom": "^6.14.1",
     "rehype-highlight": "^6.0.0",
-    "highlight.js": "^11.8.0"
+    "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^8.67.0",
+    "@typescript-eslint/parser": "^8.67.0",
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.45.0",

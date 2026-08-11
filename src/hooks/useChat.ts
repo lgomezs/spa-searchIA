@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Message } from '../types/chat'
 import { askQuestion } from '../services/aiService'
-import { v4 as uuidv4 } from 'uuid'
-
 const STORAGE_KEY = 'dev-ai-assistant:history'
+
+function createMessageId() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`
+}
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>(() => {
@@ -31,7 +33,7 @@ export function useChat() {
     setError(null)
 
     const userMessage: Message = {
-      id: uuidv4(),
+      id: createMessageId(),
       role: 'user',
       content,
       timestamp: new Date().toISOString()
@@ -43,7 +45,7 @@ export function useChat() {
     try {
       const res = await askQuestion(content)
       const assistantMessage: Message = {
-        id: uuidv4(),
+        id: createMessageId(),
         role: 'assistant',
         content: res.answer,
         timestamp: new Date().toISOString()

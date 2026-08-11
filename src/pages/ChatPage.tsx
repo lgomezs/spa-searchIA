@@ -4,7 +4,6 @@ import Sidebar from '../components/Sidebar/Sidebar'
 import ChatMessage from '../components/ChatMessage/ChatMessage'
 import ChatInput from '../components/ChatInput/ChatInput'
 import LoadingIndicator from '../components/LoadingIndicator/LoadingIndicator'
-import SourceCard from '../components/SourceCard/SourceCard'
 import { useChat } from '../hooks/useChat'
 
 export default function ChatPage() {

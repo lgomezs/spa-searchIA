@@ -11,7 +11,7 @@ export default function ChatMessage({ role, content }: { role: 'user' | 'assista
         {isUser ? (
           <div>{content}</div>
         ) : (
-          <ReactMarkdown rehypePlugins={[rehypeHighlight]} children={content} />
+          <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{content}</ReactMarkdown>
         )}
       </div>
     </div>
