@@ -10,13 +10,13 @@ export default function ChatPage() {
   const { messages, loading, error, sendMessage, newConversation, clearHistory } = useChat()
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen flex flex-col overflow-hidden">
       <Header />
-      <div className="flex flex-1">
+      <div className="flex flex-1 min-h-0">
         <Sidebar />
-        <main className="flex-1 p-4 overflow-auto">
-          <div className="max-w-3xl mx-auto">
-            <div className="mb-4 bg-white p-4 rounded shadow-sm">
+        <main className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden p-3 sm:p-4">
+          <div className="max-w-3xl mx-auto w-full min-h-0 flex-1 flex flex-col">
+            <div className="mb-3 shrink-0 bg-white p-3 sm:p-4 rounded shadow-sm">
               <div className="text-lg font-semibold">Hola, soy el asistente técnico corporativo.</div>
               <div className="text-sm text-slate-600 mt-2">
                 Puedo ayudarte a consultar la documentación y estándares técnicos de la empresa.
@@ -29,7 +29,7 @@ export default function ChatPage() {
               </div>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded" style={{ minHeight: 400 }}>
+            <div className="min-h-0 flex-1 overflow-y-auto bg-slate-50 p-3 sm:p-4 rounded">
               {error && (
                 <div className="mb-3 text-red-600">No pudimos obtener una respuesta del asistente. Intenta nuevamente.</div>
               )}
@@ -53,18 +53,13 @@ export default function ChatPage() {
 
             </div>
 
-            <div className="mt-4">
+            <div className="mt-3 shrink-0">
               <ChatInput onSend={sendMessage} loading={loading} />
             </div>
 
-            <div className="mt-4 flex gap-2">
+            <div className="mt-2 shrink-0 flex gap-2">
               <button onClick={newConversation} className="px-3 py-1 bg-white border rounded">Nueva conversación</button>
               <button onClick={clearHistory} className="px-3 py-1 bg-white border rounded">Eliminar historial</button>
-            </div>
-
-            <div className="mt-6">
-              <div className="text-sm text-slate-500 mb-2">Fuentes consultadas (si están disponibles)</div>
-              {/* Placeholder: when sources are returned, render SourceCard components */}
             </div>
           </div>
         </main>
