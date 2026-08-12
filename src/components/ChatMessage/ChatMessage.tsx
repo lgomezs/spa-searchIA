@@ -7,7 +7,7 @@ export default function ChatMessage({ role, content }: { role: 'user' | 'assista
   const isUser = role === 'user'
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} my-3`}> 
-      <div className={`${isUser ? 'bg-indigo-600 text-white' : 'bg-white text-slate-800 border'} max-w-[80%] p-4 rounded-lg shadow-sm`}>
+      <div className={`${isUser ? 'bg-indigo-600 text-white' : 'bg-white text-slate-800 border'} w-fit max-w-[95%] p-4 rounded-lg shadow-sm`}>
         {isUser ? (
           <div>{content}</div>
         ) : (
