@@ -1,0 +1,6 @@
+# See https://aka.ms/vscode-eslint for more information
+node_modules
+dist
+.env
+.env.local
+.vscode
