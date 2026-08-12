@@ -16,11 +16,7 @@ export default function ChatPage() {
         <Sidebar />
         <main className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden p-3 sm:p-4">
           <div className="w-full min-h-0 flex-1 flex flex-col">
-            <div className="mb-3 shrink-0 bg-white p-3 sm:p-4 rounded shadow-sm">
-              <div className="text-lg font-semibold">Hola, soy el asistente técnico corporativo.</div>
-              
-            </div>
-
+            
             <div className="min-h-0 flex-1 overflow-y-auto bg-slate-50 p-3 sm:p-4 rounded">
               {error && (
                 <div className="mb-3 text-red-600">No pudimos obtener una respuesta del asistente. Intenta nuevamente.</div>
