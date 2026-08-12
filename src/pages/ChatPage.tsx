@@ -18,15 +18,7 @@ export default function ChatPage() {
           <div className="max-w-3xl mx-auto w-full min-h-0 flex-1 flex flex-col">
             <div className="mb-3 shrink-0 bg-white p-3 sm:p-4 rounded shadow-sm">
               <div className="text-lg font-semibold">Hola, soy el asistente técnico corporativo.</div>
-              <div className="text-sm text-slate-600 mt-2">
-                Puedo ayudarte a consultar la documentación y estándares técnicos de la empresa.
-                <ul className="list-disc ml-5 mt-2">
-                  <li>¿Cómo debo implementar una arquitectura hexagonal?</li>
-                  <li>¿Dónde debe colocarse un Output Adapter?</li>
-                  <li>¿Cómo debemos implementar un repositorio?</li>
-                  <li>¿Qué estructura debe tener un microservicio Quarkus?</li>
-                </ul>
-              </div>
+              
             </div>
 
             <div className="min-h-0 flex-1 overflow-y-auto bg-slate-50 p-3 sm:p-4 rounded">
