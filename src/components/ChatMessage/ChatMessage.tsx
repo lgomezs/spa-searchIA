@@ -23,10 +23,10 @@ function normalizeAssistantContent(value: string) {
     .trim()
 }
 
-function CodeBlock({ children, className }: { children?: string; className?: string }) {
+function CodeBlock({ children, className }: { children: string; className?: string }) {
   const [copied, setCopied] = useState(false)
   const copy = async () => {
-    await navigator.clipboard.writeText(children ?? '')
+    await navigator.clipboard.writeText(children)
     setCopied(true)
     window.setTimeout(() => setCopied(false), 1500)
   }
@@ -53,7 +53,13 @@ export default function ChatMessage({ role, content, sources = [] }: Props) {
               <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]} components={{
                 code({ className, children, ...props }) {
                   const text = String(children).replace(/\n$/, '')
-                  return className ? <CodeBlock className={className}>{text}</CodeBlock> : <code className="rounded bg-slate-100 px-1 py-0.5 text-sm" {...props}>{children}</code>
+                  const isBlock = Boolean(className?.includes('language-'))
+
+                  if (isBlock) {
+                    return <CodeBlock className={className}>{text}</CodeBlock>
+                  }
+
+                  return <code className="rounded bg-slate-100 px-1 py-0.5 text-sm" {...props}>{text}</code>
                 }
               }}>{formattedContent}</ReactMarkdown>
             </div>
