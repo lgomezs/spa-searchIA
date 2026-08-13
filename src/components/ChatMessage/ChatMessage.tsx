@@ -12,6 +12,17 @@ interface Props {
   executionMetadata?: ExecutionMetadata
 }
 
+function normalizeAssistantContent(value: string) {
+  return value
+    .replace(/:sectnums:\s*/g, '')
+    .replace(/:source-highlighter:\s*[^\s]+\s*/g, '')
+    .replace(/^==\s+(.+)$/gm, '## $1')
+    .replace(/^===\s+(.+)$/gm, '### $1')
+    .replace(/^\*\s+/gm, '- ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
 function CodeBlock({ children, className }: { children?: string; className?: string }) {
   const [copied, setCopied] = useState(false)
   const copy = async () => {
@@ -31,6 +42,7 @@ function CodeBlock({ children, className }: { children?: string; className?: str
 
 export default function ChatMessage({ role, content, sources = [] }: Props) {
   const isUser = role === 'user'
+  const formattedContent = isUser ? content : normalizeAssistantContent(content)
   return (
     <div className={`my-3 flex ${isUser ? 'justify-end' : 'justify-start'}`}>
       <div className={`${isUser ? 'bg-indigo-600 text-white' : 'border border-slate-200 bg-white text-slate-800'} w-fit max-w-[min(95%,1100px)] rounded-xl p-4 shadow-sm`}>
@@ -43,7 +55,7 @@ export default function ChatMessage({ role, content, sources = [] }: Props) {
                   const text = String(children).replace(/\n$/, '')
                   return className ? <CodeBlock className={className}>{text}</CodeBlock> : <code className="rounded bg-slate-100 px-1 py-0.5 text-sm" {...props}>{children}</code>
                 }
-              }}>{content}</ReactMarkdown>
+              }}>{formattedContent}</ReactMarkdown>
             </div>
             {sources.length > 0 && (
               <div className="mt-4 border-t border-slate-200 pt-3">
