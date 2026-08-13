@@ -12,7 +12,7 @@ const sections = [
 
 export default function Sidebar({ onSelect }: { onSelect?: (s: string) => void }) {
   return (
-    <aside className="w-64 border-r bg-white p-4 hidden md:block">
+    <aside className="hidden w-64 shrink-0 overflow-y-auto border-r border-slate-200 bg-white p-4 md:block">
       <div className="mb-4">
         <button className="w-full text-left px-3 py-2 rounded bg-indigo-50 hover:bg-indigo-100">+ Nueva conversación</button>
       </div>
