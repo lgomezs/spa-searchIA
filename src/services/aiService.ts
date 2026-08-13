@@ -32,15 +32,16 @@ export async function askQuestion(question: string, timeoutMs = 30000): Promise<
     }
 
     const data = (await res.json()) as ApiResponse
-    const answer = data.data?.queryResult?.response ?? data.answer
+    const queryResult = data.queryResult ?? data.data?.queryResult
+    const answer = queryResult?.response ?? data.answer
     if (typeof answer !== 'string' || !answer.trim()) {
       throw new ApiError('Respuesta inválida del servidor.', 500)
     }
 
     return {
       answer,
-      sources: data.data?.queryResult?.sources ?? data.sources ?? [],
-      executionMetadata: data.data?.executionMetadata ?? data.executionMetadata
+      sources: queryResult?.sources ?? data.sources ?? [],
+      executionMetadata: data.executionMetadata ?? data.data?.executionMetadata
     }
   } catch (err: unknown) {
     if (err instanceof DOMException && err.name === 'AbortError') {

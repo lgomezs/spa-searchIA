@@ -13,19 +13,28 @@ export interface ExecutionMetadata {
   [key: string]: unknown
 }
 
+export interface QueryResult {
+  response?: string
+  sources?: ApiSource[]
+  [key: string]: unknown
+}
+
 export interface ApiResponse {
+  queryId?: string
+  timestamp?: string
+  queryRequest?: {
+    query?: string
+    metadata?: Record<string, unknown>
+  }
+  queryResult?: QueryResult
   answer?: string
   sources?: ApiSource[]
+  executionMetadata?: ExecutionMetadata
   data?: {
-    queryResult?: {
-      response?: string
-      sources?: ApiSource[]
-      [key: string]: unknown
-    }
+    queryResult?: QueryResult
     executionMetadata?: ExecutionMetadata
     [key: string]: unknown
   }
-  executionMetadata?: ExecutionMetadata
 }
 
 export interface NormalizedAnswer {
