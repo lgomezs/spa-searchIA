@@ -17,6 +17,8 @@ Instalación
 2. Instala dependencias
 
 npm install
+npm run dev
+La app abre normalmente en http://localhost:5173
 
 3. Ejecuta en modo desarrollo
 

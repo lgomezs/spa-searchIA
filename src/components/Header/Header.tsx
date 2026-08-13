@@ -1,19 +1,20 @@
 import React from 'react'
 
-export default function Header() {
+interface HeaderProps {
+  onNewConversation?: () => void
+}
+
+export default function Header({ onNewConversation }: HeaderProps) {
   return (
-    <header className="flex items-center justify-between px-4 py-3 border-b bg-white">
+    <header className="flex shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-sky-400 rounded flex items-center justify-center text-white font-bold">AI</div>
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-sky-400 font-bold text-white">AI</div>
         <div>
-          <div className="text-lg font-semibold">Developer AI Assistant</div>
+          <div className="text-lg font-semibold text-slate-900">Developer AI Assistant</div>
           <div className="text-sm text-slate-500">Asistente técnico corporativo</div>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <button className="px-3 py-1 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700">Nueva conversación</button>
-        <div className="w-8 h-8 rounded-full bg-slate-200" />
-      </div>
+      <button onClick={onNewConversation} className="rounded-lg bg-indigo-600 px-3 py-2 text-sm text-white hover:bg-indigo-700" type="button">Nueva conversación</button>
     </header>
   )
 }

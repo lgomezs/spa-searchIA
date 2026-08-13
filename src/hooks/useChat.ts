@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Message } from '../types/chat'
+import type { Message } from '../types/chat'
 import { askQuestion } from '../services/aiService'
+
 const STORAGE_KEY = 'dev-ai-assistant:history'
 
 function createMessageId() {
@@ -31,29 +32,22 @@ export function useChat() {
   const sendMessage = useCallback(async (content: string) => {
     if (loading) return
     setError(null)
-
-    const userMessage: Message = {
-      id: createMessageId(),
-      role: 'user',
-      content,
-      timestamp: new Date().toISOString()
-    }
-
-    setMessages((m) => [...m, userMessage])
+    setMessages((m) => [...m, { id: createMessageId(), role: 'user', content, timestamp: new Date().toISOString() }])
     setLoading(true)
 
     try {
       const res = await askQuestion(content)
-      const assistantMessage: Message = {
+      setMessages((m) => [...m, {
         id: createMessageId(),
         role: 'assistant',
         content: res.answer,
-        timestamp: new Date().toISOString()
-      }
-      setMessages((m) => [...m, assistantMessage])
-    } catch (err: any) {
+        timestamp: new Date().toISOString(),
+        sources: res.sources,
+        executionMetadata: res.executionMetadata
+      }])
+    } catch (err: unknown) {
       console.error(err)
-      setError(err.message || 'No pudimos obtener una respuesta del asistente. Intenta nuevamente.')
+      setError(err instanceof Error ? err.message : 'No pudimos obtener una respuesta del asistente. Intenta nuevamente.')
     } finally {
       setLoading(false)
     }
@@ -73,12 +67,5 @@ export function useChat() {
     }
   }, [])
 
-  return {
-    messages,
-    loading,
-    error,
-    sendMessage,
-    newConversation,
-    clearHistory
-  }
+  return { messages, loading, error, sendMessage, newConversation, clearHistory }
 }
