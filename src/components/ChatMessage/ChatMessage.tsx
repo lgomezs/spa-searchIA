@@ -23,6 +23,16 @@ function normalizeAssistantContent(value: string) {
     .trim()
 }
 
+function childrenToText(value: unknown): string {
+  if (value == null || typeof value === 'boolean') return ''
+  if (typeof value === 'string' || typeof value === 'number') return String(value)
+  if (Array.isArray(value)) return value.map(childrenToText).join('')
+  if (typeof value === 'object' && 'props' in value) {
+    return childrenToText((value as { props?: { children?: unknown } }).props?.children)
+  }
+  return ''
+}
+
 function CodeBlock({ children, className }: { children: string; className?: string }) {
   const [copied, setCopied] = useState(false)
   const copy = async () => {
@@ -52,7 +62,7 @@ export default function ChatMessage({ role, content, sources = [] }: Props) {
             <div className="prose prose-slate max-w-none text-[15px] leading-6 prose-headings:mb-3 prose-headings:mt-5 prose-p:my-3 prose-li:my-1 prose-table:block prose-table:overflow-x-auto">
               <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]} components={{
                 code({ className, children, ...props }) {
-                  const text = String(children).replace(/\n$/, '')
+                  const text = childrenToText(children).replace(/\n$/, '')
                   const isBlock = Boolean(className?.includes('language-'))
 
                   if (isBlock) {
