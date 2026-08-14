@@ -21,6 +21,10 @@ function normalizeAssistantContent(value: string) {
     .replace(/^==\s+(.+)$/gm, '## $1')
     .replace(/^===\s+(.+)$/gm, '### $1')
     .replace(/^\*\s+/gm, '- ')
+    // The backend often sends Java snippets as list items without Markdown fences.
+    .replace(/^-\s+((?:public|private|protected|@|interface|class)\b[^\n]*[{};][^\n]*)$/gm, (_, line) => `\n\`\`\`java\n${line.trim()}\n\`\`\``)
+    // Also handle standalone declarations when the list marker is missing.
+    .replace(/^(?=(?:public|private|protected|@|interface|class)\b)([^\n]+[{};][^\n]*)$/gm, (_, line) => `\n\`\`\`java\n${line.trim()}\n\`\`\``)
     .replace(/\n{3,}/g, '\n\n')
     .trim()
 }
