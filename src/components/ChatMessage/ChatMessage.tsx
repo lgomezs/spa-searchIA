@@ -21,6 +21,8 @@ function normalizeAssistantContent(value: string) {
     .replace(/^==\s+(.+)$/gm, '## $1')
     .replace(/^===\s+(.+)$/gm, '### $1')
     .replace(/^\*\s+/gm, '- ')
+    // Some responses lose the AsciiDoc delimiters and leave Java declarations as plain text.
+    .replace(/^(?=(?:public|private|protected|@|interface|class)\b)([^\n]+[{};][^\n]*)$/gm, (_, line) => `\n\`\`\`java\n${line.trim()}\n\`\`\``)
     .replace(/\n{3,}/g, '\n\n')
     .trim()
 }
