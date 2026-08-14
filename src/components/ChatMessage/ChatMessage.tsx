@@ -17,7 +17,8 @@ function normalizeAssistantContent(value: string) {
     .replace(/:sectnums:\s*/g, '')
     .replace(/:source-highlighter:\s*[^\s]+\s*/g, '')
     // Convert AsciiDoc source blocks returned by the API into Markdown fences.
-    .replace(/^\[source(?:,([^\]]+))?\]\s*\n----\s*\n([\s\S]*?)\n----\s*$/gm, (_, language = '', code) => `\n\`\`\`${language}\n${code.trimEnd()}\n\`\`\``)
+    // The source label may be preceded by a Markdown list marker.
+    .replace(/^(?:-\s+)?\[source(?:,([^\]]+))?\]\s*\n----\s*\n([\s\S]*?)\n----\s*$/gm, (_, language = '', code) => `\n\`\`\`${language}\n${code.trimEnd()}\n\`\`\``)
     .replace(/^==\s+(.+)$/gm, '## $1')
     .replace(/^===\s+(.+)$/gm, '### $1')
     .replace(/^\*\s+/gm, '- ')
