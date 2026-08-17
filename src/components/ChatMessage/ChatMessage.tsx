@@ -13,7 +13,7 @@ interface Props {
 }
 
 function normalizeAssistantContent(value: string) {
-  return value
+  const normalized = value
     .replace(/:sectnums:\s*/g, '')
     .replace(/:source-highlighter:\s*[^\s]+\s*/g, '')
     // Convert AsciiDoc source blocks returned by the API into Markdown fences.
@@ -22,10 +22,18 @@ function normalizeAssistantContent(value: string) {
     .replace(/^==\s+(.+)$/gm, '## $1')
     .replace(/^===\s+(.+)$/gm, '### $1')
     .replace(/^\*\s+/gm, '- ')
-    // The backend often sends Java snippets as list items without Markdown fences.
-    .replace(/^-\s+((?:public|private|protected|@|interface|class)\b[^\n]*[{};][^\n]*)$/gm, (_, line) => `\n\`\`\`java\n${line.trim()}\n\`\`\``)
-    // Also handle standalone declarations when the list marker is missing.
-    .replace(/^(?=(?:public|private|protected|@|interface|class)\b)([^\n]+[{};][^\n]*)$/gm, (_, line) => `\n\`\`\`java\n${line.trim()}\n\`\`\``)
+
+  // If the content already has fenced blocks, avoid injecting nested fences.
+  const hasMarkdownFences = /(^|\n)\s*```/.test(normalized)
+
+  return (hasMarkdownFences
+    ? normalized
+    : normalized
+      // The backend often sends Java snippets as list items without Markdown fences.
+      .replace(/^\s*-\s+((?:public|private|protected|@|interface|class)\b[^\n]*[{};][^\n]*)$/gm, (_, line) => `\n\`\`\`java\n${line.trim()}\n\`\`\``)
+      // Also handle standalone declarations when the list marker is missing.
+      .replace(/^(?=(?:public|private|protected|@|interface|class)\b)([^\n]+[{};][^\n]*)$/gm, (_, line) => `\n\`\`\`java\n${line.trim()}\n\`\`\``)
+  )
     .replace(/\n{3,}/g, '\n\n')
     .trim()
 }
@@ -47,12 +55,13 @@ function CodeBlock({ children, className }: { children: string; className?: stri
     setCopied(true)
     window.setTimeout(() => setCopied(false), 1500)
   }
+  const codeClassName = className?.trim() ? className : 'hljs language-plaintext'
   return (
     <div className="relative my-3 overflow-hidden rounded-lg bg-slate-900">
       <button onClick={copy} className="absolute right-2 top-2 rounded bg-slate-700 px-2 py-1 text-xs text-white hover:bg-slate-600" type="button">
         {copied ? 'Copiado' : 'Copiar'}
       </button>
-      <pre className="overflow-x-auto p-4 pt-10 text-sm"><code className={className}>{children}</code></pre>
+      <pre className="overflow-x-auto p-4 pt-10 text-sm text-slate-100"><code className={codeClassName}>{children}</code></pre>
     </div>
   )
 }
@@ -68,9 +77,9 @@ export default function ChatMessage({ role, content, sources = [] }: Props) {
             <div className="mb-3 text-xs font-medium text-slate-500">Respuesta basada en documentación corporativa</div>
             <div className="prose prose-slate max-w-none text-[15px] leading-6 prose-headings:mb-3 prose-headings:mt-5 prose-p:my-3 prose-li:my-1 prose-table:block prose-table:overflow-x-auto">
               <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]} components={{
-                code({ className, children, ...props }) {
+                code({ inline, className, children, ...props }) {
                   const text = childrenToText(children).replace(/\n$/, '')
-                  const isBlock = Boolean(className?.includes('language-'))
+                  const isBlock = !inline || text.includes('\n')
 
                   if (isBlock) {
                     return <CodeBlock className={className}>{text}</CodeBlock>
