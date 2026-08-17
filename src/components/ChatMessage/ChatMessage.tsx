@@ -16,9 +16,16 @@ function normalizeAssistantContent(value: string) {
   return value
     .replace(/:sectnums:\s*/g, '')
     .replace(/:source-highlighter:\s*[^\s]+\s*/g, '')
+    // Convert AsciiDoc source blocks returned by the API into Markdown fences.
+    // The source label may be preceded by a Markdown list marker.
+    .replace(/(?:^|\n)\s*(?:-\s+)?\[source(?:,([^\]\r\n]+))?\]\s*\r?\n\s*----\s*\r?\n([\s\S]*?)\r?\n\s*----(?=\s*(?:\n|$))/g, (_, language = '', code) => `\n\`\`\`${language.trim()}\n${code.trimEnd()}\n\`\`\``)
     .replace(/^==\s+(.+)$/gm, '## $1')
     .replace(/^===\s+(.+)$/gm, '### $1')
     .replace(/^\*\s+/gm, '- ')
+    // The backend often sends Java snippets as list items without Markdown fences.
+    .replace(/^-\s+((?:public|private|protected|@|interface|class)\b[^\n]*[{};][^\n]*)$/gm, (_, line) => `\n\`\`\`java\n${line.trim()}\n\`\`\``)
+    // Also handle standalone declarations when the list marker is missing.
+    .replace(/^(?=(?:public|private|protected|@|interface|class)\b)([^\n]+[{};][^\n]*)$/gm, (_, line) => `\n\`\`\`java\n${line.trim()}\n\`\`\``)
     .replace(/\n{3,}/g, '\n\n')
     .trim()
 }
